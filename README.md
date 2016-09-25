@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/myhau/streamap.svg?branch=master)](https://travis-ci.org/myhau/streamap)
+
+
+
 # Streamap
 
 Better streaming api for maps in Java 8.
@@ -12,7 +16,7 @@ Map<String, Integer> dividedByTwo =
         .filterKeys(name -> !name.equals("ignore"))
         .filterValues(number -> number % 2 == 0)
         .mapValues(number -> number / 2)
-        .toMap()
+        .toMap();
 ```
 
 instead of 
