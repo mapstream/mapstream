@@ -181,34 +181,6 @@ public class MapStreamablePairStream<K, V> implements Stream<PairEntry<K, V>> {
         return delegate.findAny();
     }
 
-    public static <T> Builder<T> builder() {
-        return Stream.builder();
-    }
-
-    public static <T> Stream<T> empty() {
-        return Stream.empty();
-    }
-
-    public static <T> Stream<T> of(T t) {
-        return Stream.of(t);
-    }
-
-    @SafeVarargs
-    public static <T> Stream<T> of(T... values) {
-        return Stream.of(values);
-    }
-
-    public static <T> Stream<T> iterate(T seed, UnaryOperator<T> f) {
-        return Stream.iterate(seed, f);
-    }
-
-    public static <T> Stream<T> generate(Supplier<T> s) {
-        return Stream.generate(s);
-    }
-
-    public static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
-        return Stream.concat(a, b);
-    }
 
     @Override
     public Iterator<PairEntry<K, V>> iterator() {

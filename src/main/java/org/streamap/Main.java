@@ -13,8 +13,8 @@ public class Main {
         intMap.put(20, 50);
 
         Map<Integer, Integer> map = mapStream(intMap)
-                .mapKey(x -> x * 20)
-                .mapValue((key, value) -> value * 50)
+                .mapKeys(x -> x * 20)
+                .mapValues((key, value) -> value * 50)
                 .toMap()
                 .mapStream()
                 .pairStream()

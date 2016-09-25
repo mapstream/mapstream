@@ -22,11 +22,11 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
         this(entryStream, false);
     }
 
-    private MapStreamImpl(Stream<? extends Entry<K, V>> entryStream, boolean ready) {
-        if(ready) {
+    private MapStreamImpl(Stream<? extends Entry<K, V>> entryStream, boolean mappedBefore) {
+        if(mappedBefore) {
             stream = (Stream<PairEntry<K, V>>) entryStream;
         } else {
-            // TODO: do we need this ? (performance) (hint: to refactor use inline)
+            // TODO: do we need this ? (performance) (hint: to refactor use inline) (maybe lazy?)
             stream = entryStream.map(PairEntry::of);
         }
     }
@@ -61,22 +61,37 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public <K2> MapStream<K2, V> mapKey(BiFunction<? super K, ? super V, ? extends K2> mapper) {
+    public <K2> MapStream<K2, V> mapKeys(BiFunction<? super K, ? super V, ? extends K2> mapper) {
         return next(stream.map(x -> x.withKey(mapper.apply(x.k(), x.v()))));
     }
 
     @Override
-    public <K2> MapStream<K2, V> mapKey(Function<? super K, ? extends K2> mapper) {
+    public <K2> MapStream<K2, V> mapKeys(Function<? super K, ? extends K2> mapper) {
         return next(stream.map(x -> x.withKey(mapper.apply(x.k()))));
     }
 
     @Override
-    public <V2> MapStream<K, V2> mapValue(BiFunction<? super K, ? super V, ? extends V2> mapper) {
+    public <V2> MapStream<K, V2> mapValues(BiFunction<? super K, ? super V, ? extends V2> mapper) {
         return next(stream.map(x -> x.withValue(mapper.apply(x.k(), x.v()))));
     }
 
     @Override
-    public <V2> MapStream<K, V2> mapValue(Function<? super V, ? extends V2> mapper) {
+    public <K1, V1> MapStream<K1, V1> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+        return next(stream.flatMap(mapper));
+    }
+
+    @Override
+    public <K1, V1> MapStream<K1, V1> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+        return next(stream.flatMap(pair -> mapper.apply(pair.k())));
+    }
+
+    @Override
+    public <K1, V1> MapStream<K1, V1> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+        return next(stream.flatMap(pair -> mapper.apply(pair.v())));
+    }
+
+    @Override
+    public <V2> MapStream<K, V2> mapValues(Function<? super V, ? extends V2> mapper) {
         return next(stream.map(x -> x.withValue(mapper.apply(x.v()))));
     }
 
@@ -86,12 +101,12 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public MapStream<K, V> filterByKey(Predicate<? super K> predicate) {
+    public MapStream<K, V> filterKeys(Predicate<? super K> predicate) {
         return next(stream.filter(x -> predicate.test(x.k())));
     }
 
     @Override
-    public MapStream<K, V> filterByValue(Predicate<? super V> predicate) {
+    public MapStream<K, V> filterValues(Predicate<? super V> predicate) {
         return next(stream.filter(x -> predicate.test(x.v())));
     }
 
@@ -101,18 +116,13 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public MapStream<K, V> peekKey(Consumer<? super K> consumer) {
+    public MapStream<K, V> peekKeys(Consumer<? super K> consumer) {
         return next(stream.peek(pair -> consumer.accept(pair.k())));
     }
 
     @Override
-    public MapStream<K, V> peekValue(Consumer<? super V> consumer) {
+    public MapStream<K, V> peekValues(Consumer<? super V> consumer) {
         return next(stream.peek(pair -> consumer.accept(pair.v())));
-    }
-
-    @Override
-    public MapStream<K, V> flatMapValue(BiFunction<? super K, ? super V, ? extends Stream<V>> mapper) {
-        return null;
     }
 
     @Override
@@ -176,6 +186,11 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
+    public Optional<K> minKey(Comparator<? super K> keyComparator) {
+        return stream.min((pair1, pair2) -> keyComparator.compare(pair1.k(), pair2.k())).map(PairEntry::k);
+    }
+
+    @Override
     public Optional<V> minValue(Comparator<? super V> valueComparator) {
         return stream.min((pair1, pair2) -> valueComparator.compare(pair1.v(), pair2.v())).map(PairEntry::v);
     }
@@ -183,6 +198,11 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     @Override
     public Optional<PairEntry<K, V>> max(Comparator<? super V> valueComparator) {
         return stream.max((pair1, pair2) -> valueComparator.compare(pair1.v(), pair2.v()));
+    }
+
+    @Override
+    public Optional<K> maxKey(Comparator<? super K> keyComparator) {
+        return stream.max((pair1, pair2) -> keyComparator.compare(pair1.k(), pair2.k())).map(PairEntry::k);
     }
 
     @Override
@@ -211,8 +231,83 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
+    public void forEach(Consumer<? super PairEntry<K, V>> consumer) {
+
+    }
+
+    @Override
     public <R, A> R collect(Collector<? super PairEntry<K, V>, A, R> collector) {
         return stream.collect(collector);
+    }
+
+    @Override
+    public <R, A> R collectKey(Collector<? super K, A, R> collector) {
+        return stream.map(PairEntry::k).collect(collector);
+    }
+
+    @Override
+    public <R, A> R collectValue(Collector<? super V, A, R> collector) {
+        return stream.map(PairEntry::v).collect(collector);
+    }
+
+    @Override
+    public <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super PairEntry<K, V>> accumulator, BiConsumer<R, R> combiner) {
+        return stream.collect(supplier, accumulator, combiner);
+    }
+
+    @Override
+    public <R> R collectKey(Supplier<R> supplier, BiConsumer<R, ? super K> accumulator, BiConsumer<R, R> combiner) {
+        return stream.map(PairEntry::k).collect(supplier, accumulator, combiner);
+    }
+
+    @Override
+    public <R> R collectValue(Supplier<R> supplier, BiConsumer<R, ? super V> accumulator, BiConsumer<R, R> combiner) {
+        return stream.map(PairEntry::v).collect(supplier, accumulator, combiner);
+    }
+
+    @Override
+    public PairEntry<K, V> reduce(PairEntry<K, V> identity, BinaryOperator<PairEntry<K, V>> accumulator) {
+        return stream.reduce(identity, accumulator);
+    }
+
+    @Override
+    public K reduceKey(K identity, BinaryOperator<K> accumulator) {
+        return stream.map(PairEntry::k).reduce(identity, accumulator);
+    }
+
+    @Override
+    public V reduceValue(V identity, BinaryOperator<V> accumulator) {
+        return stream.map(PairEntry::v).reduce(identity, accumulator);
+    }
+
+    @Override
+    public Optional<PairEntry<K, V>> reduce(BinaryOperator<PairEntry<K, V>> accumulator) {
+        return stream.reduce(accumulator);
+    }
+
+    @Override
+    public Optional<K> reduceKey(BinaryOperator<K> accumulator) {
+        return stream.map(PairEntry::k).reduce(accumulator);
+    }
+
+    @Override
+    public Optional<V> reduceValue(BinaryOperator<V> accumulator) {
+        return stream.map(PairEntry::v).reduce(accumulator);
+    }
+
+    @Override
+    public <U> U reduce(U identity, BiFunction<U, ? super PairEntry<K, V>, U> accumulator, BinaryOperator<U> combiner) {
+        return stream.reduce(identity, accumulator, combiner);
+    }
+
+    @Override
+    public <U> U reduceKey(U identity, BiFunction<U, ? super K, U> accumulator, BinaryOperator<U> combiner) {
+        return stream.map(PairEntry::k).reduce(identity, accumulator, combiner);
+    }
+
+    @Override
+    public <U> U reduceValue(U identity, BiFunction<U, ? super V, U> accumulator, BinaryOperator<U> combiner) {
+        return stream.map(PairEntry::v).reduce(identity, accumulator, combiner);
     }
 
     @Override
