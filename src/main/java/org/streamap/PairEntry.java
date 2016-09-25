@@ -19,6 +19,10 @@ public class PairEntry<K, V> implements Entry<K, V> {
         return of(entry.getKey(), entry.getValue());
     }
 
+    public static <K, V> PairEntry<K, V> pair(K key, V value) {
+        return new PairEntry<>(key, value);
+    }
+
     @Override
     public K getKey() {
         return key;

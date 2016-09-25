@@ -36,6 +36,8 @@ public interface MapStream<K, V> {
 
     StreamableMap<K, V> toMap();
 
+    StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction);
+
 
     Set<K> keySet();
 
