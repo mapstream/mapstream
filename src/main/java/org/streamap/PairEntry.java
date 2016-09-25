@@ -1,8 +1,8 @@
 package org.streamap;
 
-import java.util.Map;
+import java.util.Map.Entry;
 
-public class PairEntry<K, V> implements Map.Entry<K, V> {
+public class PairEntry<K, V> implements Entry<K, V> {
     private final K key;
     private V value;
 
@@ -15,7 +15,7 @@ public class PairEntry<K, V> implements Map.Entry<K, V> {
         return new PairEntry<>(key, value);
     }
 
-    public static <K, V> PairEntry<K, V> of(Map.Entry<K, V> entry) {
+    public static <K, V> PairEntry<K, V> of(Entry<K, V> entry) {
         return of(entry.getKey(), entry.getValue());
     }
 

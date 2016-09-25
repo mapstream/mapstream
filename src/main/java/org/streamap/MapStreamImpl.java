@@ -26,6 +26,7 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
         if(ready) {
             stream = (Stream<PairEntry<K, V>>) entryStream;
         } else {
+            // TODO: do we need this ? (performance) (hint: to refactor use inline)
             stream = entryStream.map(PairEntry::of);
         }
     }
@@ -35,17 +36,17 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public PairEntryStream<K, V> toPairStream() {
-        return new PairEntryStream<>(stream);
+    public MapStreamablePairStream<K, V> pairStream() {
+        return new MapStreamablePairStream<>(stream);
     }
 
     @Override
-    public Stream<K> toKeyStream() {
+    public Stream<K> keyStream() {
         return stream.map(PairEntry::k);
     }
 
     @Override
-    public Stream<V> toValueStream() {
+    public Stream<V> valueStream() {
         return stream.map(PairEntry::v);
     }
 
@@ -215,17 +216,17 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public MapWithMapStream<K, V> toMap() {
-        return new MapWithMapStream<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v)));
+    public StreamableMap<K, V> toMap() {
+        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v)));
     }
 
     @Override
-    public Set<K> toKeySet() {
+    public Set<K> keySet() {
         return stream.map(PairEntry::k).collect(Collectors.toSet());
     }
 
     @Override
-    public Set<V> toValueSet() {
+    public Set<V> valueSet() {
         return stream.map(PairEntry::v).collect(Collectors.toSet());
     }
 }

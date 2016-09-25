@@ -20,11 +20,11 @@ public interface MapStream<K, V> {
         return new MapStreamImpl<>(map);
     }
 
-    PairEntryStream<K, V> toPairStream();
+    MapStreamablePairStream<K, V> pairStream();
 
-    Stream<K> toKeyStream();
+    Stream<K> keyStream();
 
-    Stream<V> toValueStream();
+    Stream<V> valueStream();
 
 
     <K2, V2> MapStream<K2, V2> map(BiFunction<? super K, ? super V, ? extends PairEntry<K2, V2>> mapper);
@@ -95,11 +95,11 @@ public interface MapStream<K, V> {
     <R, A> R collect(Collector<? super PairEntry<K, V>, A, R> collector);
 
 
-    MapWithMapStream<K, V> toMap();
+    StreamableMap<K, V> toMap();
 
-    Set<K> toKeySet();
+    Set<K> keySet();
 
-    Set<V> toValueSet();
+    Set<V> valueSet();
 
 
     // TODO: add reduce

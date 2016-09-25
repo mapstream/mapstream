@@ -7,15 +7,15 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class MapWithMapStream<K, V> implements Map<K, V> {
+public class StreamableMap<K, V> implements Map<K, V> {
 
     private Map<K, V> delegate;
 
-    MapWithMapStream(Map<K, V> delegate) {
+    StreamableMap(Map<K, V> delegate) {
         this.delegate = delegate;
     }
 
-    public MapStream<K, V> stream() {
+    public MapStream<K, V> mapStream() {
         return MapStream.mapStream(this);
     }
 
@@ -147,4 +147,10 @@ public class MapWithMapStream<K, V> implements Map<K, V> {
         return delegate.merge(key, value, remappingFunction);
     }
 
+    @Override
+    public String toString() {
+        return "StreamableMap{" +
+                "delegate=" + delegate +
+                '}';
+    }
 }

@@ -15,6 +15,16 @@ public class Main {
         Map<Integer, Integer> map = mapStream(intMap)
                 .mapKey(x -> x * 20)
                 .mapValue((key, value) -> value * 50)
+                .toMap()
+                .mapStream()
+                .pairStream()
+                .mapStream()
+                .pairStream()
+                .mapStream()
+                .pairStream()
+                .mapStream()
+                .pairStream()
+                .mapStream()
                 .toMap();
 
 

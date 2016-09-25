@@ -7,18 +7,17 @@ import java.util.Spliterator;
 import java.util.function.*;
 import java.util.stream.*;
 
-public class PairEntryStream<K, V> implements Stream<PairEntry<K, V>> {
+public class MapStreamablePairStream<K, V> implements Stream<PairEntry<K, V>> {
 
     private Stream<PairEntry<K, V>> delegate;
 
-    PairEntryStream(Stream<PairEntry<K, V>> delegate) {
+    MapStreamablePairStream(Stream<PairEntry<K, V>> delegate) {
         this.delegate = delegate;
     }
 
-    public MapStream<K, V> toMapStream() {
+    public MapStream<K, V> mapStream() {
         return MapStream.mapStream(delegate);
     }
-
 
     /* EVERYTHING DELEGATED */
 
@@ -251,5 +250,11 @@ public class PairEntryStream<K, V> implements Stream<PairEntry<K, V>> {
         delegate.close();
     }
 
+    @Override
+    public String toString() {
+        return "MapStreamablePairStream{" +
+                "delegate=" + delegate +
+                '}';
+    }
 
 }
