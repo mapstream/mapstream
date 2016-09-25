@@ -321,6 +321,16 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
+    public <M extends Map<K, V>> StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction, Supplier<M> mapSupplier) {
+        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, mergeFunction, mapSupplier)));
+    }
+
+    @Override
+    public <M extends Map<K, V>> StreamableMap<K, V> toMap(Supplier<M> mapSupplier) {
+        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, null, mapSupplier)));
+    }
+
+    @Override
     public Set<K> keySet() {
         return stream.map(PairEntry::k).collect(Collectors.toSet());
     }

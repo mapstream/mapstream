@@ -18,12 +18,20 @@ import java.util.stream.Stream;
  */
 public interface MapStream<K, V> {
 
-    static <K1, V1> MapStream<K1, V1> mapStream(Stream<? extends Entry<K1, V1>> mapStream) {
-        return new MapStreamImpl<>(mapStream);
+    static <K1, V1> MapStream<K1, V1> mapStream(Stream<? extends Entry<K1, V1>> entryStream) {
+        return new MapStreamImpl<>(entryStream);
     }
 
     static <K1, V1> MapStream<K1, V1> mapStream(Map<K1, V1> map) {
         return new MapStreamImpl<>(map);
+    }
+
+    static <K1, V1> MapStream<K1, V1> from(Stream<? extends Entry<K1, V1>> entryStream) {
+        return mapStream(entryStream);
+    }
+
+    static <K1, V1> MapStream<K1, V1> from(Map<K1, V1> map) {
+        return mapStream(map);
     }
 
 
@@ -37,6 +45,10 @@ public interface MapStream<K, V> {
     StreamableMap<K, V> toMap();
 
     StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction);
+
+    <M extends Map<K, V>> StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction, Supplier<M> mapSupplier);
+
+    <M extends Map<K, V>> StreamableMap<K, V> toMap(Supplier<M> mapSupplier);
 
 
     Set<K> keySet();
