@@ -1,0 +1,6 @@
+{
+  "name": "Streamap",
+  "tagline": "Better streaming api for maps in Java 8.",
+  "body": "# Streamap\r\n\r\nBetter streaming api for maps in Java 8.\r\n\r\nExample\r\n\r\n```java\r\nMap<String, Integer> map; // [\"five\" -> 5, \"one\" -> 1, \"ten\" -> 10, \"ignore\" -> -10]  \r\nMap<String, Integer> dividedByTwo = \r\n    mapStream(map)\r\n        .filterKeys(name -> !name.equals(\"ignore\"))\r\n        .filterValues(number -> number % 2 == 0)\r\n        .mapValues(number -> number / 2)\r\n        .toMap();\r\n```\r\ninstead of\r\n\r\n```java\r\nMap<String, Integer> map; // = [\"five\" -> 5, \"one\" -> 1, \"ten\" -> 10, \"ignore\" -> - 10]\r\nMap<String, Integer> dividedByTwo = \r\n    mapStream(map)\r\n        .filter(entry -> {\r\n            return !entry.getKey().equals(\"ignore\") && number -> number % 2 == 0;\r\n        })\r\n        .collect(Collectors.toMap(\r\n                entry -> entry.getKey(),\r\n                entry -> entry.getValue() / 2\r\n        ));\r\n```\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
