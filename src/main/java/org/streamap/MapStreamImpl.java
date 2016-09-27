@@ -51,6 +51,16 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
+    public <K2, V2> MapStream<K2, V2> map(Function<? super K, ? extends K2> keyMapper, Function<? super V, ? extends V2> valueMapper) {
+        return map((k, v) -> PairEntry.of(keyMapper.apply(k), valueMapper.apply(v)));
+    }
+
+    @Override
+    public <K2, V2> MapStream<K2, V2> map(BiFunction<? super K, ? super V, ? extends K2> keyMapper, BiFunction<? super K, ? super V, ? extends V2> valueMapper) {
+        return map((k, v) -> PairEntry.of(keyMapper.apply(k, v), valueMapper.apply(k, v)));
+    }
+
+    @Override
     public <K2, V2> MapStream<K2, V2> map(BiFunction<? super K, ? super V, ? extends PairEntry<K2, V2>> mapper) {
         return next(stream.map(x -> mapper.apply(x.k(), x.v())));
     }
@@ -76,17 +86,17 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public <K1, V1> MapStream<K1, V1> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+    public <K2, V2> MapStream<K2, V2> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K2, V2>>> mapper) {
         return next(stream.flatMap(mapper));
     }
 
     @Override
-    public <K1, V1> MapStream<K1, V1> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+    public <K2, V2> MapStream<K2, V2> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K2, V2>>> mapper) {
         return next(stream.flatMap(pair -> mapper.apply(pair.k())));
     }
 
     @Override
-    public <K1, V1> MapStream<K1, V1> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K1, V1>>> mapper) {
+    public <K2, V2> MapStream<K2, V2> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K2, V2>>> mapper) {
         return next(stream.flatMap(pair -> mapper.apply(pair.v())));
     }
 
@@ -339,4 +349,6 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     public Set<V> valueSet() {
         return stream.map(PairEntry::v).collect(Collectors.toSet());
     }
+
+
 }

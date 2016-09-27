@@ -55,6 +55,9 @@ public interface MapStream<K, V> {
 
     Set<V> valueSet();
 
+    <K2, V2> MapStream<K2, V2> map(Function<? super K, ? extends K2> keyMapper, Function<? super V, ? extends V2> valueMapper);
+
+    <K2, V2> MapStream<K2, V2> map(BiFunction<? super K, ? super V, ? extends K2> keyMapper, BiFunction<? super K, ? super V, ? extends V2> valueMapper);
 
     <K2, V2> MapStream<K2, V2> map(Function<? super PairEntry<K, V>, ? extends PairEntry<K2, V2>> mapper);
 
@@ -69,11 +72,11 @@ public interface MapStream<K, V> {
     <V2> MapStream<K, V2> mapValues(BiFunction<? super K, ? super V, ? extends V2> mapper);
 
 
-    <K1, V1> MapStream<K1, V1> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K1, V1>>> mapper);
+    <K2, V2> MapStream<K2, V2> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K2, V2>>> mapper);
 
-    <K1, V1> MapStream<K1, V1> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K1, V1>>> mapper);
+    <K2, V2> MapStream<K2, V2> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K2, V2>>> mapper);
 
-    <K1, V1> MapStream<K1, V1> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K1, V1>>> mapper);
+    <K2, V2> MapStream<K2, V2> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K2, V2>>> mapper);
 
 
     MapStream<K, V> filter(BiPredicate<? super K, ? super V> predicate);
