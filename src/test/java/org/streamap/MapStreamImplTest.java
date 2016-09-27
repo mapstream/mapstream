@@ -156,19 +156,71 @@ public class MapStreamImplTest {
 
     }
 
-    @Test
-    public void peek() throws Exception {
+    private void peekPairs(Map<Integer, Integer> map) throws Exception {
+        // given
+        Set<Pair<Integer, Integer>> expected = map.entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue())).collect(toSet());
+        Set<Pair<Integer, Integer>> actualCalledWith = new HashSet<>();
 
+        // when
+        consume(mapStream(map).peek((k, v) -> actualCalledWith.add(Pair.of(k, v))));
+
+        // then
+        assertEquals(expected, actualCalledWith);
+    }
+
+
+    @Test
+    public void peekPairsFull() throws Exception {
+        peekPairs(fullMap);
     }
 
     @Test
-    public void peekKeys() throws Exception {
+    public void peekPairsEmpty() throws Exception {
+        peekPairs(emptyMap);
+    }
 
+    private void peekKeys(Map<Integer, Integer> map) throws Exception {
+        // given
+        Set<Integer> expected = map.keySet();
+        Set<Integer> actualCalledWith = new HashSet<>();
+
+        // when
+        consume(mapStream(map).peekKeys(actualCalledWith::add));
+
+        // then
+        assertEquals(expected, actualCalledWith);
     }
 
     @Test
-    public void peekValues() throws Exception {
+    public void peekKeysFull() throws Exception {
+        peekKeys(fullMap);
+    }
 
+    @Test
+    public void peekKeysEmpty() throws Exception {
+        peekKeys(emptyMap);
+    }
+
+    private void peekValues(Map<Integer, Integer> map) throws Exception {
+        // given
+        Set<Integer> expected = new HashSet<>(map.values());
+        Set<Integer> actualCalledWith = new HashSet<>();
+
+        // when
+        consume(mapStream(map).peekValues(actualCalledWith::add));
+
+        // then
+        assertEquals(expected, actualCalledWith);
+    }
+
+    @Test
+    public void peekValuesFull() throws Exception {
+        peekValues(fullMap);
+    }
+
+    @Test
+    public void peekValuesEmpty() throws Exception {
+        peekValues(emptyMap);
     }
 
     @Test
@@ -369,6 +421,10 @@ public class MapStreamImplTest {
     @Test
     public void valueSet() throws Exception {
 
+    }
+
+    private <K, V> void consume(MapStream<K, V> stream) {
+        stream.collect(Collectors.counting());
     }
 
     private static <T> Map<T, T> mapOf(T... elements) {
