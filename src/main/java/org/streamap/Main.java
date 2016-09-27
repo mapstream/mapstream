@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static org.streamap.MapStream.mapStream;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         Map<Integer, Integer> intMap = new HashMap<>();
 
@@ -26,7 +26,6 @@ public class Main {
                 .pairStream()
                 .mapStream()
                 .toMap();
-
 
         System.out.println(map);
 

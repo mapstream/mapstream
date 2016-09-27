@@ -86,9 +86,7 @@ public class MapStreamImplTest {
         // when
         Map<Integer, Integer> mapped = fullStream.map((key, value) -> pair(1, value * 20)).toMap();
 
-
-        // then
-        assertEquals(expected, mapped);
+        // then throw exception
     }
 
     @Test

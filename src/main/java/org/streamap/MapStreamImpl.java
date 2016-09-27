@@ -321,6 +321,21 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
+    public MapStream<K, V> parallel() {
+        return next(stream.parallel());
+    }
+
+    @Override
+    public MapStream<K, V> sequential() {
+        return next(stream.sequential());
+    }
+
+    @Override
+    public boolean isParallel() {
+        return stream.isParallel();
+    }
+
+    @Override
     public StreamableMap<K, V> toMap() {
         return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v)));
     }

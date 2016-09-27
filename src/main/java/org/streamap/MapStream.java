@@ -194,4 +194,9 @@ public interface MapStream<K, V> {
                       BiFunction<U, ? super V, U> accumulator,
                       BinaryOperator<U> combiner);
 
+    MapStream<K, V> parallel();
+
+    MapStream<K, V> sequential();
+
+    boolean isParallel();
 }
