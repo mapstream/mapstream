@@ -31,6 +31,16 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
         }
     }
 
+    private static <T> BinaryOperator<T> DEFAULT_MERGE_FUNCTION() {
+        return (x1, x2) -> {
+            if(x1 instanceof Comparable<?>) {
+                return ((Comparable<T>) x1).compareTo(x2) > 0 ? x2 : x1;
+            } else {
+                return x1.hashCode() < x2.hashCode() ? x1 : x2;
+            }
+        };
+    }
+
     private <K2, V2> MapStreamImpl<K2, V2> next(Stream<PairEntry<K2, V2>> newStream) {
         return new MapStreamImpl<>(newStream, true);
     }
@@ -136,8 +146,30 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public MapStream<K, V> distinct() {
-        return next(stream.distinct());
+    public MapStream<K, V> distinctValues() {
+        return distinctValues(DEFAULT_MERGE_FUNCTION());
+    }
+
+    @Override
+    public MapStream<K, V> distinctValues(BinaryOperator<K> mergeFunction) {
+        return swap(mergeFunction).swap();
+    }
+
+    @Override
+    public MapStream<V, K> swap() {
+        return swap(DEFAULT_MERGE_FUNCTION());
+    }
+
+    /**
+     * TODO: could possibly be more efficient ?
+     */
+    @Override
+    public MapStream<V, K> swap(BinaryOperator<K> mergeFunction) {
+        return new MapStreamImpl<>(stream.collect(Collectors.toMap(
+                PairEntry::v,
+                PairEntry::k,
+                mergeFunction
+        )));
     }
 
     @Override
@@ -242,7 +274,7 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
 
     @Override
     public void forEach(Consumer<? super PairEntry<K, V>> consumer) {
-
+        stream.forEach(consumer::accept);
     }
 
     @Override

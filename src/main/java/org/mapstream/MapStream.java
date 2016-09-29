@@ -84,7 +84,14 @@ public interface MapStream<K, V> {
     MapStream<K, V> peekValues(Consumer<? super V> consumer);
 
 
-    MapStream<K, V> distinct();
+    MapStream<K, V> distinctValues();
+
+    MapStream<K, V> distinctValues(BinaryOperator<K> mergeFunction);
+
+
+    MapStream<V, K> swap();
+
+    MapStream<V, K> swap(BinaryOperator<K> mergeFunction);
 
 
     long count();

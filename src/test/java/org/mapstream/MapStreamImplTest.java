@@ -1,5 +1,6 @@
 package org.mapstream;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
@@ -221,8 +223,135 @@ public class MapStreamImplTest {
     }
 
     @Test
-    public void distinct() throws Exception {
+    public void distinctShouldDoNothingForEmptyStream() throws Exception {
+        // when
+        Map<Integer, Integer> afterDistinctMap = Map(emptyStream.distinctValues());
 
+        // then
+        Assert.assertTrue(afterDistinctMap.isEmpty());
+    }
+
+    @Test
+    public void swapShouldDoNothingForEmptyStream() throws Exception {
+        // when
+        Map<Integer, Integer> afterSwapMap = Map(emptyStream.distinctValues());
+
+        // then
+        Assert.assertTrue(afterSwapMap.isEmpty());
+    }
+
+    @Test
+    public void distinctShouldRemoveDuplicateValues() throws Exception {
+        // given
+        Map<Integer, Integer> withDuplicatesMap = mapOf(
+                1, 2,
+                2, 2,
+                3, 2,
+                5, 2,
+                6, 5,
+                7, 8,
+                10, 5,
+                30, 8
+        );
+
+        Map<Integer, Integer> expectedDistinctMap = mapOf(
+                1, 2,
+                6, 5,
+                7, 8
+        );
+        // when
+        Map<Integer, Integer> distinctMap = Map(MapStream.from(withDuplicatesMap).distinctValues());
+
+        // then
+
+        Assert.assertEquals(expectedDistinctMap, distinctMap);
+    }
+
+    @Test
+    public void distinctShouldRemoveDuplicateValuesWithMergeFunction() throws Exception {
+        // given
+        Map<Integer, Integer> withDuplicatesMap = mapOf(
+                1, 2,
+                2, 2,
+                3, 2,
+                5, 2,
+                6, 5,
+                7, 8,
+                10, 5,
+                30, 8
+        );
+
+        Map<Integer, Integer> expectedDistinctMap = mapOf(
+                5, 2,
+                10, 5,
+                30, 8
+        );
+
+        BinaryOperator<Integer> mergeFunction = (v1, v2) -> v1 > v2 ? v1 : v2;
+
+        // when
+        Map<Integer, Integer> distinctMap = Map(MapStream.from(withDuplicatesMap).distinctValues(mergeFunction));
+
+        // then
+
+        Assert.assertEquals(expectedDistinctMap, distinctMap);
+    }
+
+    @Test
+    public void swapShouldSwapKeysWithValues() throws Exception {
+        // given
+        Map<Integer, Integer> withDuplicatesMap = mapOf(
+                1, 2,
+                2, 2,
+                3, 2,
+                5, 2,
+                6, 5,
+                7, 8,
+                10, 5,
+                30, 8
+        );
+
+        Map<Integer, Integer> expectedSwappedMap = mapOf(
+                2, 1,
+                5, 6,
+                8, 7
+        );
+        // when
+        Map<Integer, Integer> swappedMap = Map(MapStream.from(withDuplicatesMap).swap());
+
+        // then
+
+        Assert.assertEquals(expectedSwappedMap, swappedMap);
+    }
+
+    @Test
+    public void swapShouldSwapKeysWithValuesWithMergeFunction() throws Exception {
+        // given
+        Map<Integer, Integer> withDuplicatesMap = mapOf(
+                1, 2,
+                2, 2,
+                3, 2,
+                5, 2,
+                6, 5,
+                7, 8,
+                10, 5,
+                30, 8
+        );
+
+        Map<Integer, Integer> expectedSwappedMap = mapOf(
+                2, 5,
+                5, 10,
+                8, 30
+        );
+
+        BinaryOperator<Integer> mergeFunction = (v1, v2) -> v1 > v2 ? v1 : v2;
+
+        // when
+        Map<Integer, Integer> swappedMap = Map(MapStream.from(withDuplicatesMap).swap(mergeFunction));
+
+        // then
+
+        Assert.assertEquals(expectedSwappedMap, swappedMap);
     }
 
     @Test
