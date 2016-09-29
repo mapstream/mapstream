@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/myhau/streamap.svg?branch=master)](https://travis-ci.org/myhau/streamap) [![codecov](https://codecov.io/gh/myhau/streamap/branch/master/graph/badge.svg)](https://codecov.io/gh/myhau/streamap)
 
-# mapstream
+# mapstream 🌊
 
 Better stream api for `Map` (Java 8).
 
