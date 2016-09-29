@@ -22,7 +22,7 @@ instead of
 ```java
 Map<String, Integer> map; // = ["five" -> 5, "one" -> 1, "ten" -> 10, "ignore" -> -10]
 Map<String, Integer> dividedByTwo = 
-    map
+    map.stream()
         .filter(entry -> {
             return !entry.getKey().equals("ignore") && entry.getValue() % 2 == 0;
         })
