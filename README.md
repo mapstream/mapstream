@@ -4,7 +4,7 @@
 
 Better stream api for `Map` (Java 8).
 
-##### Example
+### Examples
 
 
 ```java
@@ -31,4 +31,9 @@ Map<String, Integer> dividedByTwo =
                 entry -> entry.getValue() / 2
         )); // = ["ten" -> 5]
 ```
+
+### Implementation
+
+
+Under the hood it uses `Stream<PairEntry<K, V>>` as a delegate, so you can for example use `MapStream.parallel()` and it will reuse well-tested jvm implementation of parallel stream (`Stream.parallel()`).    
 
