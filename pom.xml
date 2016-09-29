@@ -4,9 +4,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>${project.artifactId}</name>
+    <description>Better stream api for Map (Java 8).</description>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Michal Fudala</name>
+            <email>mail@michalfudala.com</email>
+            <organizationUrl>https://github.com/myhau</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/myhau/mapstream.git</connection>
+        <developerConnection>scm:git:ssh://github.com:myhau/mapstream.git</developerConnection>
+        <url>http://github.com/myhua/mapstream/tree/master</url>
+    </scm>
+
     <groupId>org.mapstream</groupId>
     <artifactId>mapstream</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
