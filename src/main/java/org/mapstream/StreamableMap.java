@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class StreamableMap<K, V> implements Map<K, V> {
     }
 
     public MapStream<K, V> mapStream() {
-        return MapStream.mapStream(this);
+        return MapStream.from(this);
     }
 
 

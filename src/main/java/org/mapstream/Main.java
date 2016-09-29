@@ -1,9 +1,7 @@
-package org.streamap;
+package org.mapstream;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.streamap.MapStream.mapStream;
 
 class Main {
     public static void main(String[] args) {
@@ -12,7 +10,7 @@ class Main {
         intMap.put(10, 10);
         intMap.put(20, 50);
 
-        Map<Integer, Integer> map = mapStream(intMap)
+        Map<Integer, Integer> map = MapStream.from(intMap)
                 .mapKeys(x -> x * 20)
                 .mapValues((key, value) -> value * 50)
                 .toMap()

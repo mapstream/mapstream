@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 
 import java.util.Comparator;
@@ -18,24 +18,15 @@ import java.util.stream.Stream;
  */
 public interface MapStream<K, V> {
 
-    static <K1, V1> MapStream<K1, V1> mapStream(Stream<? extends Entry<K1, V1>> entryStream) {
+    static <K1, V1> MapStream<K1, V1> from(Stream<? extends Entry<K1, V1>> entryStream) {
         return new MapStreamImpl<>(entryStream);
     }
 
-    static <K1, V1> MapStream<K1, V1> mapStream(Map<K1, V1> map) {
+    static <K1, V1> MapStream<K1, V1> from(Map<K1, V1> map) {
         return new MapStreamImpl<>(map);
     }
 
-    static <K1, V1> MapStream<K1, V1> from(Stream<? extends Entry<K1, V1>> entryStream) {
-        return mapStream(entryStream);
-    }
-
-    static <K1, V1> MapStream<K1, V1> from(Map<K1, V1> map) {
-        return mapStream(map);
-    }
-
-
-    MapStreamablePairStream<K, V> pairStream();
+    PairEntryStream<K, V> pairStream();
 
     Stream<K> keyStream();
 

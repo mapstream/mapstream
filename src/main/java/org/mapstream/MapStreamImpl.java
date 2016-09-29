@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -36,8 +36,8 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     }
 
     @Override
-    public MapStreamablePairStream<K, V> pairStream() {
-        return new MapStreamablePairStream<>(stream);
+    public PairEntryStream<K, V> pairStream() {
+        return new PairEntryStream<>(stream);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
-import static org.streamap.MapStream.mapStream;
-import static org.streamap.PairEntry.pair;
+import static org.mapstream.PairEntry.pair;
 
 public class MapStreamImplTest {
 
@@ -29,10 +28,10 @@ public class MapStreamImplTest {
         fullMap.put(5, 100);
         fullMap.put(10, 10);
         fullMap.put(-10, 50);
-        fullStream = mapStream(fullMap);
+        fullStream = MapStream.from(fullMap);
 
         emptyMap = new HashMap<>();
-        emptyStream = mapStream(emptyMap);
+        emptyStream = MapStream.from(emptyMap);
     }
 
     @Test
@@ -160,7 +159,7 @@ public class MapStreamImplTest {
         Set<Pair<Integer, Integer>> actualCalledWith = new HashSet<>();
 
         // when
-        consume(mapStream(map).peek((k, v) -> actualCalledWith.add(Pair.of(k, v))));
+        consume(MapStream.from(map).peek((k, v) -> actualCalledWith.add(Pair.of(k, v))));
 
         // then
         assertEquals(expected, actualCalledWith);
@@ -183,7 +182,7 @@ public class MapStreamImplTest {
         Set<Integer> actualCalledWith = new HashSet<>();
 
         // when
-        consume(mapStream(map).peekKeys(actualCalledWith::add));
+        consume(MapStream.from(map).peekKeys(actualCalledWith::add));
 
         // then
         assertEquals(expected, actualCalledWith);
@@ -205,7 +204,7 @@ public class MapStreamImplTest {
         Set<Integer> actualCalledWith = new HashSet<>();
 
         // when
-        consume(mapStream(map).peekValues(actualCalledWith::add));
+        consume(MapStream.from(map).peekValues(actualCalledWith::add));
 
         // then
         assertEquals(expected, actualCalledWith);

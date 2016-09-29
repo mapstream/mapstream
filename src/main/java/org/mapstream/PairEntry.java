@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 import java.util.Map.Entry;
 

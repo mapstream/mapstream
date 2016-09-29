@@ -1,4 +1,4 @@
-package org.streamap;
+package org.mapstream;
 
 class Pair<T1, T2> {
     private final T1 v1;
