@@ -6,7 +6,7 @@ Better stream api for `Map` (Java 8).
 
 ### Examples
 
-
+With mapstream you can do:
 ```java
 Map<String, Integer> map; // = ["five" -> 5, "one" -> 1, "ten" -> 10, "ignore" -> -10]  
 Map<String, Integer> dividedByTwo = 
@@ -22,7 +22,7 @@ instead of
 ```java
 Map<String, Integer> map; // = ["five" -> 5, "one" -> 1, "ten" -> 10, "ignore" -> -10]
 Map<String, Integer> dividedByTwo = 
-    MapStream.from(map)
+    map
         .filter(entry -> {
             return !entry.getKey().equals("ignore") && entry.getValue() % 2 == 0;
         })
