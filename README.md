@@ -23,9 +23,7 @@ instead of
 Map<String, Integer> map; // = ["five" -> 5, "one" -> 1, "ten" -> 10, "ignore" -> -10]
 Map<String, Integer> dividedByTwo = 
     map.stream()
-        .filter(entry -> {
-            return !entry.getKey().equals("ignore") && entry.getValue() % 2 == 0;
-        })
+        .filter(entry -> !entry.getKey().equals("ignore") && entry.getValue() % 2 == 0)
         .collect(Collectors.toMap(
                 entry -> entry.getKey(),
                 entry -> entry.getValue() / 2
