@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/myhau/streamap.svg?branch=master)](https://travis-ci.org/myhau/streamap) [![codecov](https://codecov.io/gh/myhau/streamap/branch/master/graph/badge.svg)](https://codecov.io/gh/myhau/streamap)
+[![Build Status](https://travis-ci.org/myhau/mapstream.svg?branch=master)](https://travis-ci.org/myhau/mapstream) [![codecov](https://codecov.io/gh/myhau/mapstream/branch/master/graph/badge.svg)](https://codecov.io/gh/myhau/mapstream)
 
 # mapstream 🌊
 
