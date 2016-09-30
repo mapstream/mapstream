@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/myhau/mapstream.svg?branch=master)](https://travis-ci.org/myhau/mapstream) [![codecov](https://codecov.io/gh/myhau/mapstream/branch/master/graph/badge.svg)](https://codecov.io/gh/myhau/mapstream)
+[![Build Status](https://travis-ci.org/myhau/mapstream.svg?branch=master)](https://travis-ci.org/myhau/mapstream) [![Coverage Status](https://coveralls.io/repos/github/myhau/mapstream/badge.svg?branch=master)](https://coveralls.io/github/myhau/mapstream?branch=master)
 
 # mapstream 🌊
 
