@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/myhau/mapstream.svg?branch=master)](https://travis-ci.org/myhau/mapstream) [![Coverage Status](https://coveralls.io/repos/github/myhau/mapstream/badge.svg?branch=master)](https://coveralls.io/github/myhau/mapstream?branch=master) [![Gitter](https://img.shields.io/gitter/room/mapstream/mapstream.svg?maxAge=2592000)](https://gitter.im/mapstream/mapstream) 
 
-# mapstream 🌊
+# mapstream :ocean:
 
 Better stream api for `Map` (Java 8).
 
