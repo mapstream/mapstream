@@ -4,13 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.mapstream.PairEntry.pair;
@@ -355,8 +353,37 @@ public class MapStreamImplTest {
     }
 
     @Test
-    public void count() throws Exception {
+    public void shouldCountFull() throws Exception {
+        // expect
+        assertEquals(fullMap.size(), fullStream.count());
+    }
 
+    @Test
+    public void shouldCountEmpty() throws Exception {
+        // expect
+        assertEquals(0, emptyStream.count());
+    }
+
+    @Test
+    public void countDoesNotCareAboutDuplicateValues() throws Exception {
+        // given
+        Map<Integer, Integer> inputMap = mapOf(
+                1, 1,
+                2, 1,
+                3, 1,
+                4, 1
+        );
+
+        // when
+        long count = MapStream.from(inputMap).count();
+
+        // then
+        assertEquals(4, count);
+    }
+
+    @Test
+    public void shouldCountSingle() throws Exception {
+        assertEquals(1, MapStream.from(singletonMap(1, 1)).count());
     }
 
     @Test
