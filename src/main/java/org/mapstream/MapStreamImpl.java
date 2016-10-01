@@ -47,7 +47,7 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
 
     @Override
     public PairEntryStream<K, V> pairStream() {
-        return new PairEntryStream<>(stream);
+        return new PairEntryStreamImpl<>(stream);
     }
 
     @Override
@@ -72,7 +72,7 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
 
     @Override
     public <K2, V2> MapStream<K2, V2> map(BiFunction<? super K, ? super V, ? extends PairEntry<K2, V2>> mapper) {
-        return next(stream.map(x -> mapper.apply(x.k(), x.v())));
+        return next(stream.map(pair -> mapper.apply(pair.k(), pair.v())));
     }
 
     @Override
@@ -82,17 +82,22 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
 
     @Override
     public <K2> MapStream<K2, V> mapKeys(BiFunction<? super K, ? super V, ? extends K2> mapper) {
-        return next(stream.map(x -> x.withKey(mapper.apply(x.k(), x.v()))));
+        return next(stream.map(pair -> pair.withKey(mapper.apply(pair.k(), pair.v()))));
     }
 
     @Override
     public <K2> MapStream<K2, V> mapKeys(Function<? super K, ? extends K2> mapper) {
-        return next(stream.map(x -> x.withKey(mapper.apply(x.k()))));
+        return next(stream.map(pair -> pair.withKey(mapper.apply(pair.k()))));
     }
 
     @Override
     public <V2> MapStream<K, V2> mapValues(BiFunction<? super K, ? super V, ? extends V2> mapper) {
-        return next(stream.map(x -> x.withValue(mapper.apply(x.k(), x.v()))));
+        return next(stream.map(pair -> pair.withValue(mapper.apply(pair.k(), pair.v()))));
+    }
+
+    @Override
+    public <T> Stream<T> mapToStream(BiFunction<? super K, ? super V, ? extends T> mapper) {
+        return stream.map(pair -> mapper.apply(pair.k(), pair.v()));
     }
 
     @Override
@@ -108,6 +113,11 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
     @Override
     public <K2, V2> MapStream<K2, V2> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K2, V2>>> mapper) {
         return next(stream.flatMap(pair -> mapper.apply(pair.v())));
+    }
+
+    @Override
+    public <T> Stream<T> flatMapToStream(BiFunction<? super K, ? super V, ? extends Stream<T>> mapper) {
+        return stream.flatMap(pair -> mapper.apply(pair.k(), pair.v()));
     }
 
     @Override
@@ -369,22 +379,22 @@ class MapStreamImpl<K, V> implements MapStream<K, V> {
 
     @Override
     public StreamableMap<K, V> toMap() {
-        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v)));
+        return new StreamableMapImpl<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v)));
     }
 
     @Override
     public StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction) {
-        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, mergeFunction)));
+        return new StreamableMapImpl<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, mergeFunction)));
     }
 
     @Override
     public <M extends Map<K, V>> StreamableMap<K, V> toMap(BinaryOperator<V> mergeFunction, Supplier<M> mapSupplier) {
-        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, mergeFunction, mapSupplier)));
+        return new StreamableMapImpl<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, mergeFunction, mapSupplier)));
     }
 
     @Override
     public <M extends Map<K, V>> StreamableMap<K, V> toMap(Supplier<M> mapSupplier) {
-        return new StreamableMap<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, null, mapSupplier)));
+        return new StreamableMapImpl<>(collect(Collectors.toMap(PairEntry::k, PairEntry::v, null, mapSupplier)));
     }
 
     @Override

@@ -1,11 +1,8 @@
 package org.mapstream;
 
 
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -63,11 +60,17 @@ public interface MapStream<K, V> {
     <V2> MapStream<K, V2> mapValues(BiFunction<? super K, ? super V, ? extends V2> mapper);
 
 
+    <T> Stream<T> mapToStream(BiFunction<? super K, ? super V, ? extends T> mapper);
+
+
     <K2, V2> MapStream<K2, V2> flatMap(Function<? super PairEntry<K, V>, ? extends Stream<PairEntry<K2, V2>>> mapper);
 
     <K2, V2> MapStream<K2, V2> flatMapKeys(Function<? super K, ? extends Stream<PairEntry<K2, V2>>> mapper);
 
     <K2, V2> MapStream<K2, V2> flatMapValues(Function<? super V, ? extends Stream<PairEntry<K2, V2>>> mapper);
+
+
+    <T> Stream<T> flatMapToStream(BiFunction<? super K, ? super V, ? extends Stream<T>> mapper);
 
 
     MapStream<K, V> filter(BiPredicate<? super K, ? super V> predicate);
