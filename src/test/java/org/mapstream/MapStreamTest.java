@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.mapstream.PairEntry.pair;
 
-public class MapStreamImplTest {
+public class MapStreamTest {
 
     Map<Integer, Integer> fullMap;
     MapStream<Integer, Integer> fullStream;
