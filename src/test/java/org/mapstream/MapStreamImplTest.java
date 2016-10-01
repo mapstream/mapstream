@@ -353,19 +353,19 @@ public class MapStreamImplTest {
     }
 
     @Test
-    public void shouldCountFull() throws Exception {
+    public void countShouldBeEqualToOriginMapSize() throws Exception {
         // expect
         assertEquals(fullMap.size(), fullStream.count());
     }
 
     @Test
-    public void shouldCountEmpty() throws Exception {
+    public void countShouldBeZeroIfEmpty() throws Exception {
         // expect
         assertEquals(0, emptyStream.count());
     }
 
     @Test
-    public void countDoesNotCareAboutDuplicateValues() throws Exception {
+    public void countShouldNotCareAboutDuplicateValues() throws Exception {
         // given
         Map<Integer, Integer> inputMap = mapOf(
                 1, 1,
@@ -382,7 +382,7 @@ public class MapStreamImplTest {
     }
 
     @Test
-    public void shouldCountSingle() throws Exception {
+    public void countShouldWorkWithSingletonMap() throws Exception {
         assertEquals(1, MapStream.from(singletonMap(1, 1)).count());
     }
 
