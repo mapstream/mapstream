@@ -5,13 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mapstream.PairEntry.pair;
+
 
 public class MapStreamTest {
 
@@ -386,14 +392,63 @@ public class MapStreamTest {
         assertEquals(1, MapStream.from(singletonMap(1, 1)).count());
     }
 
-    @Test
-    public void allMatch() throws Exception {
+    public void testMatchMethodsForEmptyStream(boolean expectedForAllMethods, BiPredicate<MapStream<Integer, Integer>, Predicate<Integer>>... matchKeyFunctions) throws Exception {
+        // given
+        List<Predicate<Integer>> predList =
+                asList(
+                        x -> true,
+                        x -> false,
+                        x -> x != 1,
+                        x -> x == 1,
+                        x -> x > 1,
+                        x -> x < 1
+                );
 
+        // when
+
+        boolean allMatch = Stream.of(matchKeyFunctions)
+                .map(
+                        predicateMapper -> predList.stream()
+                                .map(pred -> predicateMapper.test(MapStream.from(emptyMap), pred))
+                                .allMatch(booleanRes -> booleanRes == expectedForAllMethods)
+                )
+                .allMatch(thatTrue -> thatTrue);
+
+        // then
+        assertTrue(allMatch);
     }
 
     @Test
-    public void allValuesMatch() throws Exception {
+    public void allMatchShouldAlwaysBeTrueForEmptyStream() throws Exception {
+        testMatchMethodsForEmptyStream(
+                true,
+                MapStream::allKeysMatch,
+                MapStream::allValuesMatch,
+                (x, pred) -> x.allMatch((f1, f2) -> pred.test(f2)),
+                (x, pred) -> x.allMatch((f1, f2) -> pred.test(f1))
+        );
+    }
 
+    @Test
+    public void anyMatchShouldAlwaysBeFalseForEmptyStream() throws Exception {
+        testMatchMethodsForEmptyStream(
+                false,
+                MapStream::anyKeysMatch,
+                MapStream::anyValuesMatch,
+                (x, pred) -> x.anyMatch((f1, f2) -> pred.test(f2)),
+                (x, pred) -> x.anyMatch((f1, f2) -> pred.test(f1))
+        );
+    }
+
+    @Test
+    public void noneMatchShouldAlwaysBeTrueForEmptyStream() throws Exception {
+        testMatchMethodsForEmptyStream(
+                true,
+                MapStream::noneKeysMatch,
+                MapStream::noneValuesMatch,
+                (x, pred) -> x.noneMatch((f1, f2) -> pred.test(f2)),
+                (x, pred) -> x.noneMatch((f1, f2) -> pred.test(f1))
+        );
     }
 
     @Test
@@ -402,7 +457,7 @@ public class MapStreamTest {
     }
 
     @Test
-    public void anyMatch() throws Exception {
+    public void anyMatchForEmptyIsAlwaysFalse() throws Exception {
 
     }
 
